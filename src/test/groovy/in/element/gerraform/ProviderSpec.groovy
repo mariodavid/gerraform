@@ -11,9 +11,9 @@ class ProviderSpec extends AbstractAtrifactSpec {
 
     def "provider can create resources and will be part of the output"() {
         given:
-        Provider aws = tf.provider("aws", [:])
+        Provider aws = tf.provider("aws")
         when:
-        aws.resource('instance', 'my_app', [:])
+        aws.resource('instance', 'my_app')
         then:
         tf.toMap() == [
                 provider: [[aws: [:]]],
@@ -25,11 +25,22 @@ class ProviderSpec extends AbstractAtrifactSpec {
         ]
     }
 
+    def "provider can use a closure to define its properties"() {
+        when:
+        tf.provider("aws") {
+            value = "hello"
+        }
+        then:
+        tf.toMap() == [
+                provider: [[aws: [value: "hello"]]],
+        ]
+    }
+
     def "provider can create data sources and will be part of the output"() {
         given:
-        Provider aws = tf.provider("aws", [:])
+        Provider aws = tf.provider("aws")
         when:
-        aws.data('instance', 'my_app', [:])
+        aws.data('instance', 'my_app')
         then:
         tf.toMap() == [
                 provider: [[aws: [:]]],
@@ -44,13 +55,13 @@ class ProviderSpec extends AbstractAtrifactSpec {
 
     def "multiple providers with different aliases can exist"() {
         given:
-        Provider aws = tf.provider("aws", [:])
+        Provider aws = tf.provider("aws")
         Provider aws2 = tf.provider("aws", [alias: "provider2"])
         when:
-        aws.resource('instance', 'app1', [:])
+        aws.resource('instance', 'app1')
 
         and:
-        aws2.resource('instance', 'app2', [:])
+        aws2.resource('instance', 'app2')
         then:
         tf.toMap() == [
                 provider: [

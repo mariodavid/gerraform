@@ -7,7 +7,7 @@ class OutputSpec extends AbstractAtrifactSpec {
     def "an output will be created once it is defined"() {
 
         given:
-        Resource elasticIp = tf.resource("aws_eip","elastic_ip", [:])
+        Resource elasticIp = tf.resource("aws_eip","elastic_ip")
 
         when:
         tf.output("ip", [
@@ -31,10 +31,10 @@ class OutputSpec extends AbstractAtrifactSpec {
 
     def "uplicate outputs are not possible"() {
         given:
-        tf.output("duplicateOutput", [:])
+        tf.output("duplicateOutput")
 
         when:
-        tf.output("duplicateOutput", [:])
+        tf.output("duplicateOutput")
 
         then:
         thrown DuplicateOutputException

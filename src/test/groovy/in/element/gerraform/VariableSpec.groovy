@@ -36,13 +36,30 @@ class VariableSpec extends AbstractAtrifactSpec {
 
     }
 
+
+    def "a variable can use a closure to configure the properties of the variable"() {
+
+        when:
+        tf.variable("foo") {
+            value = "bar"
+        }
+
+        then:
+        tf.toMap() == [
+                variable: [
+                        foo: [
+                            value: "bar"
+                        ]
+                ]
+        ]
+    }
     def "a variable cannot be created twice"() {
 
         given:
-        tf.variable("duplicateVariable", [:])
+        tf.variable("duplicateVariable")
 
         when:
-        tf.variable("duplicateVariable", [:])
+        tf.variable("duplicateVariable")
 
         then:
         thrown(DuplicateVariableException)

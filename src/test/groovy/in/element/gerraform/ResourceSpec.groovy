@@ -7,10 +7,10 @@ class ResourceSpec extends AbstractAtrifactSpec {
     def "a resource cannot be created twice"() {
 
         given:
-        tf.resource("aws_instance","duplicateResource", [:])
+        tf.resource("aws_instance","duplicateResource")
 
         when:
-        tf.resource("aws_instance","duplicateResource", [:])
+        tf.resource("aws_instance","duplicateResource")
 
         then:
         thrown(DuplicateResouceException)
@@ -18,7 +18,7 @@ class ResourceSpec extends AbstractAtrifactSpec {
 
     def "a resource can be created and referenced afterwards"() {
         given:
-        Resource myApp = tf.resource("aws_instance","my_app", [:])
+        Resource myApp = tf.resource("aws_instance","my_app")
 
         when:
         tf.resource("aws_route53_record","${myApp.name}_dns", [
@@ -44,7 +44,7 @@ class ResourceSpec extends AbstractAtrifactSpec {
 
         when:
         tf.resource("aws_route53_record","dns") { resource ->
-            [name: resource.name]
+            name = resource.name
         }
 
         then:
@@ -53,6 +53,25 @@ class ResourceSpec extends AbstractAtrifactSpec {
                         aws_route53_record: [
                                 dns: [
                                         name: "dns"
+                                ]
+                        ]
+                ]
+        ]
+    }
+
+    def "resource can use a closure to configure the properties of the resource"() {
+
+        when:
+        tf.resource("aws_route53_record","dns") {
+            name = "my_resource"
+        }
+
+        then:
+        tf.toMap() == [
+                resource: [
+                        aws_route53_record: [
+                                dns: [
+                                        name: "my_resource"
                                 ]
                         ]
                 ]

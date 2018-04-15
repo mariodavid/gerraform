@@ -8,10 +8,10 @@ class DataSourceSpec extends AbstractAtrifactSpec {
     def "a data source cannot be created twice"() {
 
         given:
-        tf.data("aws_instance", "my_app", [:])
+        tf.data("aws_instance", "my_app")
 
         when:
-        tf.data("aws_instance", "my_app", [:])
+        tf.data("aws_instance", "my_app")
 
         then:
         thrown(DuplicateDataSourceException)
@@ -51,7 +51,7 @@ class DataSourceSpec extends AbstractAtrifactSpec {
 
         when:
         tf.data("aws_route53_record", "dns") { dataSource ->
-            [name: dataSource.name]
+            name = dataSource.name
         }
 
         then:

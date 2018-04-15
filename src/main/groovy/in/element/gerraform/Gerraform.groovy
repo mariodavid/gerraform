@@ -18,7 +18,7 @@ class Gerraform {
 
 
 
-    def variable(String name, Map<String, Object> params) {
+    def variable(String name, Map<String, Object> params = [:]) {
         if (variables.containsKey(name)) {
             throw new DuplicateVariableException("The variable $name already exists")
         }
@@ -26,7 +26,17 @@ class Gerraform {
         new Variable(name: name)
     }
 
-    def local(String name, Object value) {
+    def variable(String name, Closure paramsClosure) {
+        if (variables.containsKey(name)) {
+            throw new DuplicateVariableException("The variable $name already exists")
+        }
+        def variable = new Variable(name: name)
+        variables[name] = closureToMap(paramsClosure, variable)
+
+        variable
+    }
+
+    def local(String name, Object value = "") {
         if (locals.containsKey(name)) {
             throw new DuplicateLocalException("The local $name already exists")
         }
@@ -34,14 +44,22 @@ class Gerraform {
         new Local(name: name)
     }
 
-    def provider(String type, Map<String, Object> params) {
+    def provider(String type, Map<String, Object> params = [:]) {
         def provider = new Provider(type: type, params: params, tf: this)
+        providers << provider
+        provider
+    }
+    def provider(String type, Closure paramsClosure) {
+        def provider = new Provider(type: type, tf: this)
+
+        provider.params = closureToMap(paramsClosure, provider)
+
         providers << provider
         provider
     }
 
 
-    def resource(String type, String name, Map<String, Object> params) {
+    def resource(String type, String name, Map<String, Object> params = [:]) {
         initResourceForType(type, name)
 
         Resource resource = new Resource(type: type, name: name)
@@ -56,9 +74,16 @@ class Gerraform {
 
         Resource resource = new Resource(type: type, name: name)
 
-        resources[type][name] = paramsClosure.call(resource)
+        resources[type][name] = closureToMap(paramsClosure, resource)
 
         resource
+    }
+
+    Map<String, Object> closureToMap(Closure paramsClosure, def closureParameter) {
+        ClosureMap subResource = new ClosureMap()
+        paramsClosure.delegate = subResource
+        paramsClosure.call(closureParameter)
+        subResource.params
     }
 
     private void initResourceForType(String type, String name) {
@@ -69,7 +94,7 @@ class Gerraform {
     }
 
 
-    def data(String type, String name, Map<String, Object> params) {
+    def data(String type, String name, Map<String, Object> params = [:]) {
         initDataSourceForType(type, name)
 
         DataSource dataSource = new DataSource(type: type, name: name)
@@ -84,7 +109,7 @@ class Gerraform {
 
         DataSource dataSource = new DataSource(type: type, name: name)
 
-        dataSources[type][name] = paramsClosure.call(dataSource)
+        dataSources[type][name] = closureToMap(paramsClosure, dataSource)
 
         dataSource
     }
@@ -97,7 +122,7 @@ class Gerraform {
     }
 
 
-    def output(String name,Map<String, Object> params) {
+    def output(String name,Map<String, Object> params = [:]) {
         if (outputs.containsKey(name)) {
             throw new DuplicateOutputException()
         }
@@ -138,5 +163,18 @@ class Gerraform {
 
     String toJSON() {
         JsonOutput.prettyPrint(JsonOutput.toJson(toMap()))
+    }
+}
+
+class ClosureMap {
+    Map<String, Object> params = [:]
+
+
+    def propertyMissing(String name, value) {
+        params[name] = value
+    }
+
+    def propertyMissing(String name) {
+        params[name]
     }
 }

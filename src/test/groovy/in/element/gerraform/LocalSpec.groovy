@@ -50,10 +50,10 @@ class LocalSpec extends AbstractAtrifactSpec {
     def "a local cannot be created twice"() {
 
         given:
-        tf.local("duplicateLocal", [:])
+        tf.local("duplicateLocal")
 
         when:
-        tf.local("duplicateLocal", [:])
+        tf.local("duplicateLocal")
 
         then:
         thrown(DuplicateLocalException)
