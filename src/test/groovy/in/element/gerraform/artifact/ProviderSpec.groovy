@@ -1,4 +1,4 @@
-package in.element.gerraform
+package in.element.gerraform.artifact
 
 class ProviderSpec extends AbstractAtrifactSpec {
 

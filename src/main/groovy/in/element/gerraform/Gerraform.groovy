@@ -1,6 +1,11 @@
 package in.element.gerraform
 
 import groovy.json.JsonOutput
+import in.element.gerraform.artifact.DataSource
+import in.element.gerraform.artifact.Local
+import in.element.gerraform.artifact.Provider
+import in.element.gerraform.artifact.Resource
+import in.element.gerraform.artifact.Variable
 import in.element.gerraform.exception.DuplicateDataSourceException
 import in.element.gerraform.exception.DuplicateLocalException
 import in.element.gerraform.exception.DuplicateOutputException

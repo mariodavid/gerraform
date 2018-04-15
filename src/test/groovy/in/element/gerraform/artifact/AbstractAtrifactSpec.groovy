@@ -1,5 +1,6 @@
-package in.element.gerraform
+package in.element.gerraform.artifact
 
+import in.element.gerraform.Gerraform
 import spock.lang.Specification
 
 abstract class AbstractAtrifactSpec extends Specification {

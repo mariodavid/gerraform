@@ -1,5 +1,7 @@
 package in.element.gerraform
 
+import in.element.gerraform.artifact.AbstractAtrifactSpec
+import in.element.gerraform.artifact.Resource
 import in.element.gerraform.exception.DuplicateOutputException
 
 class OutputSpec extends AbstractAtrifactSpec {

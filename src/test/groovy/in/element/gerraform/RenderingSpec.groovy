@@ -1,5 +1,7 @@
 package in.element.gerraform
 
+import in.element.gerraform.artifact.AbstractAtrifactSpec
+
 
 class RenderingSpec extends AbstractAtrifactSpec {
 

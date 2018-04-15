@@ -1,4 +1,4 @@
-package in.element.gerraform
+package in.element.gerraform.artifact
 
 class Local extends Artifact {
     String ref() {

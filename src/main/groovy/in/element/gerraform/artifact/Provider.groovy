@@ -1,4 +1,6 @@
-package in.element.gerraform
+package in.element.gerraform.artifact
+
+import in.element.gerraform.Gerraform
 
 class Provider {
     String type

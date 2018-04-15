@@ -1,7 +1,7 @@
-package in.element.gerraform
+package in.element.gerraform.artifact
 
-class TypeArtifact extends Artifact {
-    String type
+class Artifact {
+    String name
 
     String getString(String... parts) {
         "\${${parts.join(".")}}"
