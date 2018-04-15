@@ -3,11 +3,13 @@ package in.element.gerraform
 import groovy.json.JsonOutput
 import in.element.gerraform.artifact.DataSource
 import in.element.gerraform.artifact.Local
+import in.element.gerraform.artifact.Module
 import in.element.gerraform.artifact.Provider
 import in.element.gerraform.artifact.Resource
 import in.element.gerraform.artifact.Variable
 import in.element.gerraform.exception.DuplicateDataSourceException
 import in.element.gerraform.exception.DuplicateLocalException
+import in.element.gerraform.exception.DuplicateModuleException
 import in.element.gerraform.exception.DuplicateOutputException
 import in.element.gerraform.exception.DuplicateResouceException
 import in.element.gerraform.exception.DuplicateVariableException
@@ -20,6 +22,7 @@ class Gerraform {
     Map<String, Map<String, Object>> resources = [:]
     Map<String, Map<String, Object>> dataSources = [:]
     Map<String, Map<String, Object>> outputs = [:]
+    Map<String, Map<String, Object>> modules = [:]
 
 
 
@@ -27,8 +30,10 @@ class Gerraform {
         if (variables.containsKey(name)) {
             throw new DuplicateVariableException("The variable $name already exists")
         }
+        Variable variable = new Variable(name: name)
         variables[name] = params
-        new Variable(name: name)
+
+        variable
     }
 
     def variable(String name, Closure paramsClosure) {
@@ -54,6 +59,7 @@ class Gerraform {
         providers << provider
         provider
     }
+
     def provider(String type, Closure paramsClosure) {
         def provider = new Provider(type: type, tf: this)
 
@@ -84,7 +90,21 @@ class Gerraform {
         resource
     }
 
-    Map<String, Object> closureToMap(Closure paramsClosure, def closureParameter) {
+    def module(String name, Map<String, Object> params = [:]) {
+        if (modules.containsKey(name)) {
+            throw new DuplicateModuleException("The module $name already exists")
+        }
+        Module resultModule = new Module(name: name)
+        modules[name] = params
+
+        resultModule
+    }
+
+    def module(String name, Closure paramsClosure) {
+        module(name, closureToMap(paramsClosure))
+    }
+
+    Map<String, Object> closureToMap(Closure paramsClosure, def closureParameter = null) {
         ClosureMap subResource = new ClosureMap()
         paramsClosure.delegate = subResource
         paramsClosure.call(closureParameter)
@@ -133,6 +153,10 @@ class Gerraform {
         }
 
         outputs[name] = params
+    }
+
+    def output(String name, Closure paramsClosure) {
+        output(name, closureToMap(paramsClosure))
     }
 
 

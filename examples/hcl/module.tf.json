@@ -1,0 +1,12 @@
+{
+  "module": [
+    {
+      "consul": [
+        {
+          "servers": 5,
+          "source": "hashicorp/consul/aws"
+        }
+      ]
+    }
+  ]
+}
