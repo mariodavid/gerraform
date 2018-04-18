@@ -1,17 +1,13 @@
-# gerraform
-Terraform scripting in Groovy
+package in.element.gerraform
 
-## Why
-Gerraform allows to write Terraform descriptions in Groovy instead of dealing with [Terraform's HCL](https://www.terraform.io/docs/configuration/syntax.html).
+import in.element.gerraform.artifact.Resource
+import in.element.gerraform.artifact.Variable
+import spock.lang.Specification
 
-It uses the facility of Terraform to interact with JSON as an input format. Gerraform will create the Terraform JSON. 
 
-## Example usage
+class ExampleUsageSpec extends Specification {
 
-Here's a snippet of example code (copied over from an [ExampleUsageSpec](https://github.com/mariodavid/gerraform/blob/master/src/test/groovy/in/element/gerraform/ExampleUsageSpec.groovy))
-which should give you a hint on how to use this project:
 
-```
 
     def "Gerraform description can be used to create Terraform JSON"() {
 
@@ -62,8 +58,4 @@ which should give you a hint on how to use this project:
     }
 }"""
     }
-```
-
-
-## Credits
-This project is based on the idea of the python based library: [ulich/terrafornication](https://github.com/ulich/terrafornication)
+}
